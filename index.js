@@ -20,8 +20,10 @@ app.get('/item', function (req, res) {
 app.use(express.json())
 //Create -[POST] /item
 app.post('/item', function(req, res){
-  console.log(req.body)
-  res.send('Create')
+  const item = req.body.nome
+  lista.push(item)
+  //console.log(req.body)
+  res.send('Item criado com sucesso')
 })
 
 app.listen(3000)

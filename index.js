@@ -16,6 +16,14 @@ app.get('/item', function (req, res) {
   res.send(lista)
 })
 
+//READ by ID - [GET] /item/:id
+app.get('/item/:id', function(req, res){
+  const id = req.params.id
+  console.log(id)
+  const item = lista[id -1]
+  res.send(item)
+})
+
 //sinalizar que usaremos JSON no Body para o Express
 app.use(express.json())
 //Create -[POST] /item

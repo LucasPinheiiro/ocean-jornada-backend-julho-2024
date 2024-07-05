@@ -68,6 +68,16 @@ async function main() {
     res.send("item atualizado com sucesso")
   })
 
+  //delete
+  app.delete('/item/:id', async function(req, res){
+    const id = req.params.id
+    //remove
+    await collection.deleteOne({_id: new ObjectId(id)})
+
+    //evia msg de sucesso
+    res.send('item deletado com sucesso')
+  })
+
   app.listen(3000)
 }
 

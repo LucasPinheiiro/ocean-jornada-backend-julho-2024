@@ -23,11 +23,16 @@ async function main() {
   //lista de personangens
   const lista = ['Rick Sanchez', 'Morty Smith', 'Summer Smith']
 
-  //READ all - [GET] /item
-  app.get('/item', function (req, res) {
-    res.send(lista)
-  })
+  const db = client.db(dbName)
+  const collection = db.collection  ('item')
 
+  //READ all - [GET] /item
+  app.get('/item', async function (req, res) {
+    //Obter todos os documentos da collections
+    const documentos = await collection.find().toArray()
+    //Pegamos os documentos e enviamos como resposta HTTP
+    res.send(documentos)
+  })
   //READ by ID - [GET] /item/:id
   app.get('/item/:id', function (req, res) {
     const id = req.params.id
@@ -39,6 +44,7 @@ async function main() {
 
   //sinalizar que usaremos JSON no Body para o Express
   app.use(express.json())
+
   //Create -[POST] /item
   app.post('/item', function (req, res) {
     const item = req.body.nome

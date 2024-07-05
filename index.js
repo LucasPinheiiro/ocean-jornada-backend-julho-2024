@@ -1,37 +1,61 @@
 const express = require('express')
+const { MongoClient } = require('mongodb')
 const app = express()
 
-app.get('/', function (req, res) {
-  res.send('Hello World')
-})
-app.get('/oi', function (req, res) {
+const dbURL = 'mongodb+srv://admin:sESkgMfI92ctVf41@cluster0.rtveojx.mongodb.net/'
+const dbName = 'ocean-jornada-backend'
+
+const client = new MongoClient(dbURL)
+
+
+async function main() {
+  console.log('Conectando ao banco de dados')
+  await client.connect()
+  console.log('Banco de dados conectado com sucesso')
+
+  app.get('/', function (req, res) {
+    res.send('Hello World')
+  })
+  app.get('/oi', function (req, res) {
     res.send('Olá, mundo!?')
   })
 
-//lista de personangens
-const lista = ['Rick Sanchez', 'Morty Smith', 'Summer Smith']
+  //lista de personangens
+  const lista = ['Rick Sanchez', 'Morty Smith', 'Summer Smith']
 
-//READ all - [GET] /item
-app.get('/item', function (req, res) {
-  res.send(lista)
-})
+  //READ all - [GET] /item
+  app.get('/item', function (req, res) {
+    res.send(lista)
+  })
 
-//READ by ID - [GET] /item/:id
-app.get('/item/:id', function(req, res){
-  const id = req.params.id
-  console.log(id)
-  const item = lista[id -1]
-  res.send(item)
-})
+  //READ by ID - [GET] /item/:id
+  app.get('/item/:id', function (req, res) {
+    const id = req.params.id
+    //console.log(id)
+    console.log(req.params)
+    const item = lista[id - 1]
+    res.send(item)
+  })
 
-//sinalizar que usaremos JSON no Body para o Express
-app.use(express.json())
-//Create -[POST] /item
-app.post('/item', function(req, res){
-  const item = req.body.nome
-  lista.push(item)
-  //console.log(req.body)
-  res.send('Item criado com sucesso')
-})
+  //sinalizar que usaremos JSON no Body para o Express
+  app.use(express.json())
+  //Create -[POST] /item
+  app.post('/item', function (req, res) {
+    const item = req.body.nome
+    lista.push(item)
+    //console.log(req.body)
+    res.send('Item criado com sucesso')
+  })
 
-app.listen(3000)
+  //Update - [PUT] /item/:id
+  app.put('/item/:id', function (req, res) {
+    const id = req.params.id
+    const novoItem = req.body.nome
+    lista[id - 1] = novoItem
+    res.send("item atualizado com sucesso")
+  })
+
+  app.listen(3000)
+}
+
+main()

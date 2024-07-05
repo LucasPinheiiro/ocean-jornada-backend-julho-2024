@@ -33,6 +33,7 @@ async function main() {
     //Pegamos os documentos e enviamos como resposta HTTP
     res.send(documentos)
   })
+
   //READ by ID - [GET] /item/:id
   app.get('/item/:id', function (req, res) {
     const id = req.params.id
@@ -46,11 +47,14 @@ async function main() {
   app.use(express.json())
 
   //Create -[POST] /item
-  app.post('/item', function (req, res) {
-    const item = req.body.nome
-    lista.push(item)
-    //console.log(req.body)
-    res.send('Item criado com sucesso')
+  app.post('/item', async function (req, res) {
+    const item = req.body
+
+    //Insere o item na collection
+    await collection.insertOne(item)
+  
+    //Exibe o item adicionado
+    res.send(item)
   })
 
   //Update - [PUT] /item/:id

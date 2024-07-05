@@ -58,10 +58,13 @@ async function main() {
   })
 
   //Update - [PUT] /item/:id
-  app.put('/item/:id', function (req, res) {
+  app.put('/item/:id', async function (req, res) {
     const id = req.params.id
-    const novoItem = req.body.nome
-    lista[id - 1] = novoItem
+    const novoItem = req.body
+    await collection.updateOne(
+      {_id: new ObjectId(id)},
+      {$set: novoItem}
+    )
     res.send("item atualizado com sucesso")
   })
 
